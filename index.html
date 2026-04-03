@@ -1,5 +1,798 @@
-<html>
-  <body>
-    <h1>Hello, world!</h1>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Name — UX Designer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Epilogue:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --white: #FFFFFF;
+      --off: #F7F6F3;
+      --orange: #E8530A;
+      --orange-light: #FFF0E8;
+      --dark: #111110;
+      --mid: #6E6B65;
+      --line: #E4E2DC;
+      --card: #FAFAF8;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--white);
+      color: var(--dark);
+      font-family: 'Epilogue', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 48px;
+      height: 60px;
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.02em;
+      color: var(--dark);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--orange); }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      color: var(--mid);
+      text-decoration: none;
+      transition: color 0.2s;
+      font-family: 'Syne', sans-serif;
+      font-weight: 500;
+    }
+    .nav-links a:hover { color: var(--orange); }
+
+    /* HERO */
+    .hero {
+      padding-top: 60px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding-left: 24px;
+      padding-right: 24px;
+      position: relative;
+      background: var(--white);
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, #E4E2DC 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -62%);
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(232,83,10,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .avatar-wrap {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      border: 3px solid var(--white);
+      box-shadow: 0 0 0 1px var(--line), 0 12px 40px rgba(232,83,10,0.18);
+      overflow: hidden;
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeDown 0.7s ease 0.1s forwards;
+      flex-shrink: 0;
+      background: var(--orange-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .avatar-placeholder {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 2rem;
+      color: var(--orange);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--orange-light);
+      border: 1px solid rgba(232,83,10,0.2);
+      color: var(--orange);
+      font-family: 'Syne', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 22px;
+      opacity: 0;
+      animation: fadeDown 0.7s ease 0.2s forwards;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--orange);
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .hero-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      color: var(--dark);
+      margin-bottom: 18px;
+      opacity: 0;
+      animation: fadeDown 0.7s ease 0.3s forwards;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.15rem);
+      color: var(--mid);
+      line-height: 1.75;
+      max-width: 480px;
+      font-weight: 300;
+      margin-bottom: 36px;
+      opacity: 0;
+      animation: fadeDown 0.7s ease 0.42s forwards;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeDown 0.7s ease 0.54s forwards;
+    }
+
+    .btn {
+      display: inline-block;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 13px 28px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-solid { background: var(--orange); color: white; }
+    .btn-solid:hover {
+      background: #c94208;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(232,83,10,0.28);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--dark);
+      border: 1.5px solid var(--line);
+    }
+    .btn-ghost:hover { border-color: var(--orange); color: var(--orange); }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      animation: fadeDown 0.7s ease 0.9s forwards;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--orange), transparent);
+      animation: scrollPulse 2s ease infinite;
+    }
+    .scroll-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--mid);
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    /* SECTION COMMON */
+    section { padding: 96px 48px; }
+
+    .section-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 16px;
+    }
+    .section-eyebrow::before {
+      content: '';
+      width: 20px;
+      height: 2px;
+      background: var(--orange);
+      display: inline-block;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--dark);
+      margin-bottom: 16px;
+    }
+
+    .section-body {
+      font-size: 0.95rem;
+      color: var(--mid);
+      line-height: 1.85;
+      max-width: 520px;
+    }
+
+    /* ABOUT */
+    .about {
+      background: var(--off);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .about-grid {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 32px;
+    }
+    .skill {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      padding: 7px 15px;
+      border-radius: 4px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      color: var(--mid);
+      transition: all 0.2s;
+    }
+    .skill:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-light); }
+
+    .about-stats { display: flex; flex-direction: column; gap: 0; }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .stat-row:first-child { border-top: 1px solid var(--line); }
+
+    .stat-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--mid);
+      letter-spacing: 0.04em;
+    }
+    .stat-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+    .stat-value.orange { color: var(--orange); }
+
+    /* WORK */
+    .work { background: var(--white); }
+    .work-inner { max-width: 1000px; margin: 0 auto; }
+
+    .work-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 56px;
+    }
+
+    .project {
+      display: grid;
+      grid-template-columns: 5fr 4fr;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: var(--card);
+      margin-bottom: 16px;
+      transition: box-shadow 0.3s, transform 0.3s;
+      text-decoration: none;
+      color: inherit;
+    }
+    .project:hover {
+      box-shadow: 0 20px 60px rgba(17,17,16,0.08);
+      transform: translateY(-2px);
+    }
+
+    .project-img {
+      overflow: hidden;
+      min-height: 420px;
+      background: var(--off);
+      position: relative;
+    }
+    .project-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+    .project:hover .project-img img { transform: scale(1.04); }
+
+    .project-body {
+      padding: 52px 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .project-type {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 12px;
+    }
+
+    .project-name {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.5rem, 2.5vw, 2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: var(--dark);
+      margin-bottom: 16px;
+    }
+
+    .project-desc {
+      font-size: 0.88rem;
+      color: var(--mid);
+      line-height: 1.8;
+      margin-bottom: 36px;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 36px;
+    }
+    .tag {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 4px;
+      background: var(--orange-light);
+      color: var(--orange);
+      border: 1px solid rgba(232,83,10,0.15);
+    }
+
+    .project-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--dark);
+      text-decoration: none;
+      border-bottom: 1.5px solid var(--orange);
+      padding-bottom: 2px;
+      width: fit-content;
+      transition: color 0.2s;
+    }
+    .project-cta:hover { color: var(--orange); }
+    .project-cta-arrow { transition: transform 0.2s; }
+    .project:hover .project-cta-arrow { transform: translateX(4px); }
+
+    .project-soon {
+      border: 1.5px dashed var(--line);
+      border-radius: 12px;
+      padding: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .soon-text {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--line);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .soon-badge {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--mid);
+      border: 1px solid var(--line);
+      padding: 6px 14px;
+      border-radius: 100px;
+      letter-spacing: 0.08em;
+    }
+
+    /* CONTACT */
+    .contact { background: var(--dark); text-align: center; }
+    .contact-inner { max-width: 600px; margin: 0 auto; }
+    .contact .section-eyebrow { justify-content: center; color: var(--orange); }
+    .contact .section-eyebrow::before { background: var(--orange); }
+    .contact .section-title { color: var(--white); }
+    .contact .section-body { color: rgba(255,255,255,0.45); margin: 0 auto 48px; }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      text-align: left;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 40px;
+    }
+
+    .contact-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .contact-row:last-child { border-bottom: none; }
+    .contact-row:hover { background: rgba(232,83,10,0.08); }
+
+    .contact-row-left { display: flex; align-items: center; gap: 14px; }
+
+    .contact-row-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: rgba(232,83,10,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+    }
+
+    .contact-row-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.5);
+      display: block;
+      margin-bottom: 2px;
+    }
+    .contact-row-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--white);
+    }
+    .contact-row-arrow {
+      color: rgba(255,255,255,0.2);
+      font-size: 0.9rem;
+      transition: color 0.2s, transform 0.2s;
+    }
+    .contact-row:hover .contact-row-arrow { color: var(--orange); transform: translateX(3px); }
+
+    /* FOOTER */
+    footer {
+      background: var(--dark);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 24px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    footer p {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.25);
+      letter-spacing: 0.04em;
+    }
+
+    /* REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 800px) {
+      nav { padding: 0 20px; }
+      section { padding: 72px 24px; }
+      .about-grid { grid-template-columns: 1fr; gap: 48px; }
+      .project { grid-template-columns: 1fr; }
+      .project-img { min-height: 260px; }
+      .project-body { padding: 32px 28px; }
+      .work-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .project-soon { flex-direction: column; text-align: center; }
+      footer { flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="#" class="nav-logo">Your<span>.</span>Name</a>
+    <ul class="nav-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+
+      <!--
+        PROFILE PICTURE
+        To add your photo, replace the div.avatar-placeholder below with:
+        <img src="photo.jpg" alt="Your Name" />
+        Make sure photo.jpg is in the same folder as index.html in your repo.
+      -->
+      <div class="avatar-wrap">
+        <div class="avatar-placeholder">YN</div>
+      </div>
+
+      <div class="hero-badge">Open to work · Göteborg</div>
+      <h1 class="hero-name">Your Name</h1>
+      <p class="hero-sub">Junior UX Designer focused on clean, human-centred experiences. I care about the small things that make products feel right.</p>
+      <div class="hero-actions">
+        <a href="#work" class="btn btn-solid">See my work</a>
+        <a href="#contact" class="btn btn-ghost">Get in touch</a>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <span class="scroll-label">Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="about-grid">
+      <div>
+        <p class="section-eyebrow reveal">About me</p>
+        <h2 class="section-title reveal">Designing things people actually want to use.</h2>
+        <p class="section-body reveal">I'm a junior UX designer currently looking for my first full-time role. I studied UX design and have hands-on experience designing real e-commerce flows from research through to high-fidelity prototypes.</p>
+        <p class="section-body reveal" style="margin-top:16px;">I work best in teams that take craft seriously and aren't afraid to iterate. Based in Göteborg but open to remote.</p>
+        <div class="skills-list reveal">
+          <span class="skill">Figma</span>
+          <span class="skill">Prototyping</span>
+          <span class="skill">User Research</span>
+          <span class="skill">Wireframing</span>
+          <span class="skill">Usability Testing</span>
+          <span class="skill">HTML & CSS</span>
+          <span class="skill">Design Systems</span>
+        </div>
+      </div>
+
+      <div class="about-stats reveal">
+        <div class="stat-row">
+          <span class="stat-label">Based in</span>
+          <span class="stat-value">Göteborg, Sweden</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Availability</span>
+          <span class="stat-value orange">Open to work</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Experience</span>
+          <span class="stat-value">Junior level</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Primary tool</span>
+          <span class="stat-value">Figma</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Languages</span>
+          <span class="stat-value">Swedish · English</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section class="work" id="work">
+    <div class="work-inner">
+      <div class="work-head reveal">
+        <div>
+          <p class="section-eyebrow" style="margin-bottom:8px;">Selected work</p>
+          <h2 class="section-title" style="margin-bottom:0;">Case studies</h2>
+        </div>
+        <span style="font-family:'Syne',sans-serif;font-size:0.7rem;color:var(--mid);font-weight:600;letter-spacing:0.08em;">01 / 01</span>
+      </div>
+
+      <a class="project reveal" href="#work">
+        <div class="project-img">
+          <img src="Home.png" alt="Femique redesign" />
+        </div>
+        <div class="project-body">
+          <p class="project-type">E-commerce · UX Design</p>
+          <h3 class="project-name">Femique — Shopping Experience Redesign</h3>
+          <p class="project-desc">Redesigning the end-to-end purchase flow for a Swedish nursing bra brand — from product discovery through to checkout confirmation.</p>
+          <div class="project-tags">
+            <span class="tag">Figma</span>
+            <span class="tag">User Flows</span>
+            <span class="tag">Checkout UX</span>
+            <span class="tag">School project</span>
+          </div>
+          <span class="project-cta">
+            View case study
+            <span class="project-cta-arrow">→</span>
+          </span>
+        </div>
+      </a>
+
+      <div class="project-soon reveal">
+        <span class="soon-text">Next project</span>
+        <span class="soon-badge">Coming soon</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="contact-inner">
+      <p class="section-eyebrow reveal">Get in touch</p>
+      <h2 class="section-title reveal">Let's talk.</h2>
+      <p class="section-body reveal">I'm actively looking for my first UX role. Whether you have a position, a project, or just want to connect — feel free to reach out.</p>
+
+      <div class="contact-links reveal">
+        <a class="contact-row" href="mailto:your@email.com">
+          <div class="contact-row-left">
+            <div class="contact-row-icon">✉️</div>
+            <div>
+              <span class="contact-row-label">Email</span>
+              <span class="contact-row-value">your@email.com</span>
+            </div>
+          </div>
+          <span class="contact-row-arrow">→</span>
+        </a>
+        <a class="contact-row" href="https://linkedin.com/in/yourhandle" target="_blank">
+          <div class="contact-row-left">
+            <div class="contact-row-icon">💼</div>
+            <div>
+              <span class="contact-row-label">LinkedIn</span>
+              <span class="contact-row-value">linkedin.com/in/yourhandle</span>
+            </div>
+          </div>
+          <span class="contact-row-arrow">→</span>
+        </a>
+        <a class="contact-row" href="https://figma.com/@yourhandle" target="_blank">
+          <div class="contact-row-left">
+            <div class="contact-row-icon">🎨</div>
+            <div>
+              <span class="contact-row-label">Figma</span>
+              <span class="contact-row-value">figma.com/@yourhandle</span>
+            </div>
+          </div>
+          <span class="contact-row-arrow">→</span>
+        </a>
+      </div>
+
+      <a href="mailto:your@email.com" class="btn btn-solid reveal">Say hello →</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 Your Name</p>
+    <p>Göteborg, Sweden</p>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 70);
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => obs.observe(el));
+  </script>
+</body>
 </html>
